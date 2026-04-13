@@ -1,20 +1,48 @@
-:root { --sup-color: #00d2ff; --bat-color: #ffc107; }
-body { background: #020205; font-family: 'Rajdhani', sans-serif; touch-action: none; -webkit-user-select: none; user-select: none; }
+:root { --sup-color: #c81518; --bat-color: #ffc107; }
+body { background: #020205; font-family: 'Rajdhani', sans-serif; touch-action: none; }
 .x-small { font-size: 0.65rem; }
 .tracking-widest { letter-spacing: 0.3em; }
+
+/* Estilos de Barras */
+.navbar, footer { background: #0a0a0f !important; z-index: 3000; }
+
+/* HUD y Overlay dentro del Main */
 .hud-blur { background: rgba(10, 10, 15, 0.85); backdrop-filter: blur(15px); }
-#ui-overlay { position: fixed; inset: 0; background: radial-gradient(circle at center, #101828 0%, #020205 100%); z-index: 2000; }
-.selection-box { background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255,255,255,0.08); border-radius: 40px; backdrop-filter: blur(25px); max-width: 700px; }
-.hero-selection { border-radius: 25px; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); cursor: pointer; transition: 0.4s; position: relative; }
-.hero-selection:hover { transform: translateY(-10px); background: rgba(255, 255, 255, 0.08); }
-.superman-card:hover { border-color: var(--sup-color); box-shadow: 0 0 30px rgba(0, 210, 255, 0.3); }
-.batman-card:hover { border-color: var(--bat-color); box-shadow: 0 0 30px rgba(255, 193, 7, 0.3); }
-.hero-img { height: 110px; object-fit: contain; }
-.main-title { font-family: 'Orbitron'; background: linear-gradient(#fff, #666); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-#gameCanvas { background: #000; border-radius: 20px; box-shadow: 0 0 50px rgba(0,0,0,0.8); cursor: none; max-width: 98vw; max-height: 70vh; }
-.bg-canvas { background: radial-gradient(circle, #0e0e1f, #020205); }
-.hide { display: none !important; }
+#ui-overlay { 
+    background: radial-gradient(circle at center, rgba(16, 24, 40, 0.9) 0%, rgba(2, 2, 5, 0.95) 100%); 
+    z-index: 1000; 
+    transition: opacity 0.5s ease;
+}
+
+.selection-box { 
+    background: rgba(255, 255, 255, 0.03); 
+    border: 1px solid rgba(255,255,255,0.1); 
+    border-radius: 30px; 
+    backdrop-filter: blur(10px); 
+    max-width: 600px; 
+}
+
+.hero-selection { 
+    border-radius: 20px; 
+    background: rgba(255, 255, 255, 0.05); 
+    cursor: pointer; 
+    transition: 0.3s; 
+    border: 1px solid transparent;
+}
+.hero-selection:hover { transform: translateY(-5px); border-color: var(--sup-color); background: rgba(0, 210, 255, 0.1); }
+
+.hero-img { height: 90px; object-fit: contain; }
+.main-title { font-family: 'Orbitron'; color: #fff; text-shadow: 0 0 20px rgba(255,255,255,0.3); }
+
+/* Canvas */
+#gameCanvas { 
+    background: #000; 
+    max-width: 100%; 
+    max-height: 100%; 
+    cursor: none; 
+}
+.bg-canvas { background: #020205; }
+.hide { display: none !important; opacity: 0; }
+.pointer-none { pointer-events: none; }
 .animate-pulse { animation: pulse 2s infinite; }
 @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
-.instructions-panel { background: rgba(0,0,0,0.4); }
-.pointer-none { pointer-events: none; }

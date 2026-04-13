@@ -3,43 +3,33 @@ const ctx = canvas.getContext('2d');
 const scoreDisplay = document.getElementById('score');
 const hiScoreDisplay = document.getElementById('hi-score');
 const healthBar = document.getElementById('health-bar');
-const levelDisplay = document.getElementById('level-display');
 const uiOverlay = document.getElementById('ui-overlay');
+const gameHud = document.getElementById('game-hud');
 const menuMusic = document.getElementById('menuMusic');
 
 canvas.width = 900;
 canvas.height = 500;
 
-let isTouch = false, score = 0, health = 100, gameActive = false, currentLevel = 1, currentHero = '';
+let isTouch = false, score = 0, health = 100, gameActive = false, currentHero = '', currentLevel = 1;
 let obstacles = [], lasers = [], keys = {};
-let player = { x: 70, y: 220, w: 85, h: 55, speed: 8 };
-let targetY = 220; // Punto hacia donde el héroe se desliza
-let mouse = { x: 450, y: 250 }; // Solo para apuntar y el cursor visual
-let damageFlash = 0;
+let player = { x: 70, y: 220, w: 85, h: 55 };
+let targetY = 220, mouse = { x: 450, y: 250 }, damageFlash = 0;
 
 const assets = { bg: new Image(), hero: new Image(), obs: new Image(), ptr: new Image() };
 const sounds = { superman: new Audio('assets/audio/audio1.mp3'), batman: new Audio('assets/audio/audio2.mp3') };
-sounds.superman.loop = sounds.batman.loop = true;
 
-// Hi-Score
 let hiScore = localStorage.getItem('dcHiScore') || 0;
 hiScoreDisplay.innerText = hiScore;
 
 // Audio del Menú
-const startAudio = () => { if(menuMusic.paused && !gameActive) menuMusic.play().catch(()=>{}); };
-document.addEventListener('click', startAudio);
-document.addEventListener('touchstart', startAudio);
+document.addEventListener('click', () => { if(menuMusic.paused && !gameActive) menuMusic.play(); }, {once: true});
 
-// Manejo de entrada (Mouse y Touch)
 function updateInput(e) {
     const rect = canvas.getBoundingClientRect();
     const clientX = e.touches ? e.touches[0].clientX : e.clientX;
     const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-    
     mouse.x = (clientX - rect.left) * (canvas.width / rect.width);
     mouse.y = (clientY - rect.top) * (canvas.height / rect.height);
-    
-    // Si es touch o mueves el mouse, actualizamos el destino Y del héroe
     targetY = mouse.y - player.h / 2;
 }
 
@@ -47,8 +37,6 @@ window.addEventListener('mousemove', e => { if(!isTouch) updateInput(e); });
 window.addEventListener('touchstart', e => { isTouch = true; updateInput(e); }, {passive: false});
 window.addEventListener('touchmove', e => { updateInput(e); e.preventDefault(); }, {passive: false});
 window.addEventListener('mousedown', () => { if(gameActive && !isTouch) fireLaser(); });
-
-// Teclado
 window.addEventListener('keydown', e => keys[e.key.toLowerCase()] = true);
 window.addEventListener('keyup', e => keys[e.key.toLowerCase()] = false);
 
@@ -59,7 +47,9 @@ function initGame(hero) {
     assets.hero.src = hero === 'superman' ? 'assets/img/hero.png' : 'assets/img/hero2.png';
     assets.obs.src = hero === 'superman' ? 'assets/img/asteroid.png' : 'assets/img/villano.png';
     assets.ptr.src = hero === 'superman' ? 'assets/img/puntero.png' : 'assets/img/puntero2.png';
+    
     uiOverlay.classList.add('hide');
+    gameHud.classList.remove('hide'); // Mostrar HUD al empezar
     gameActive = true;
     sounds[hero].play();
     spawnObstacles();
@@ -67,7 +57,6 @@ function initGame(hero) {
 }
 
 function fireLaser() {
-    // Apunta hacia donde esté el mouse/puntero
     const angle = Math.atan2(mouse.y - (player.y + player.h/2), mouse.x - (player.x + player.w));
     lasers.push({ x: player.x + player.w, y: player.y + player.h/2, angle: angle, speed: 18 });
 }
@@ -82,11 +71,8 @@ function gameLoop() {
     if(!gameActive) return;
     ctx.drawImage(assets.bg, 0, 0, canvas.width, canvas.height);
 
-    // MOVIMIENTO HÍBRIDO:
-    if(keys['w'] || keys['arrowup']) targetY -= player.speed;
-    if(keys['s'] || keys['arrowdown']) targetY += player.speed;
-
-    // El héroe se desliza suavemente hacia el targetY (ya sea por teclas o por mouse)
+    if(keys['w']) targetY -= 8;
+    if(keys['s']) targetY += 8;
     player.y += (targetY - player.y) * 0.15;
     player.y = Math.max(0, Math.min(canvas.height - player.h, player.y));
 
@@ -94,16 +80,13 @@ function gameLoop() {
 
     if(isTouch && Date.now() % 400 < 20) fireLaser();
 
-    // Láseres
     lasers.forEach((l, i) => {
         l.x += Math.cos(l.angle) * l.speed;
         l.y += Math.sin(l.angle) * l.speed;
-        ctx.shadowBlur = 10; ctx.shadowColor = currentHero === 'superman' ? '#0df' : '#fb0';
-        ctx.fillStyle = "#fff"; ctx.fillRect(l.x, l.y, 25, 4); ctx.shadowBlur = 0;
-        if(l.x > canvas.width || l.y < 0 || l.y > canvas.height) lasers.splice(i, 1);
+        ctx.fillStyle = "#fff"; ctx.fillRect(l.x, l.y, 25, 4);
+        if(l.x > canvas.width) lasers.splice(i, 1);
     });
 
-    // Enemigos
     obstacles.forEach((o, i) => {
         o.x -= o.speed;
         ctx.drawImage(assets.obs, o.x, o.y, o.size, o.size);
@@ -129,5 +112,4 @@ function updateHUD() {
     scoreDisplay.innerText = score.toString().padStart(4, '0');
     healthBar.style.width = health + "%";
     healthBar.className = `progress-bar ${health < 35 ? 'bg-danger' : (currentHero === 'superman' ? 'bg-info' : 'bg-warning')}`;
-    levelDisplay.innerText = currentLevel;
 }

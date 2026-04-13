@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Examen T1: Justice League Defense</title>
+    <title>Examen T1: DC Orbital Defense</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/style.css">
@@ -12,7 +12,7 @@
     
     <audio id="menuMusic" src="assets/audio/menu.mp3" loop preload="auto"></audio>
 
-    <nav class="navbar navbar-dark bg-dark border-bottom border-info border-opacity-25 py-2">
+    <nav class="navbar navbar-dark bg-dark border-bottom border-info border-opacity-25 py-2 shadow-sm">
         <div class="container-fluid px-4">
             <span class="navbar-brand mb-0 h1 font-monospace text-info small tracking-widest">
                 2.5 EXAMEN T1. GRAFICACIÓN 2D | NC: 23200830
@@ -21,76 +21,65 @@
         </div>
     </nav>
 
-    <div id="ui-overlay" class="d-flex align-items-center justify-content-center">
-        <div class="container text-center">
-            <div class="selection-box p-4 p-md-5 mx-auto shadow-lg">
-                <header class="mb-4">
-                    <h1 class="main-title display-4 fw-black mb-0">JUSTICE LEAGUE</h1>
-                    <div class="text-info x-small tracking-widest fw-bold mt-2">SISTEMA DE DEFENSA ORBITAL V2.0</div>
-                </header>
-                
-                <div class="instructions-panel p-3 mb-4 rounded-4 border border-white border-opacity-10 text-start">
+    <main class="flex-grow-1 position-relative d-flex align-items-center justify-content-center bg-canvas overflow-hidden">
+        
+        <div id="game-hud" class="hud-container position-absolute top-0 start-0 w-100 p-3 pointer-none hide">
+            <div class="d-flex justify-content-between align-items-center hud-blur p-3 rounded-4 border border-white border-opacity-10 shadow-lg">
+                <div class="px-2">
+                    <small class="text-secondary d-block x-small tracking-widest text-uppercase">Score</small>
+                    <span id="score" class="fs-4 fw-black text-info font-monospace">0000</span>
+                </div>
+                <div class="flex-grow-1 px-4 d-none d-sm-block text-center">
+                    <div class="progress bg-dark bg-opacity-50" style="height: 10px; border-radius: 5px;">
+                        <div id="health-bar" class="progress-bar progress-bar-animated" style="width: 100%"></div>
+                    </div>
+                </div>
+                <div class="px-2 text-end">
+                    <small class="text-secondary d-block x-small tracking-widest text-uppercase">Hi-Score</small>
+                    <span id="hi-score" class="fs-5 fw-light font-monospace opacity-75">0</span>
+                </div>
+            </div>
+        </div>
+
+        <div id="ui-overlay" class="position-absolute w-100 h-100 d-flex align-items-center justify-content-center">
+            <div class="container text-center">
+                <div class="selection-box p-4 p-md-5 mx-auto shadow-lg">
+                    <header class="mb-4">
+                        <h1 class="main-title display-5 fw-black mb-0">JUSTICE LEAGUE</h1>
+                        <div class="text-info x-small tracking-widest fw-bold mt-2">DEFENSA ORBITAL</div>
+                    </header>
+                    
+                    <div class="instructions-panel p-3 mb-4 rounded-4 border border-white border-opacity-10 text-start">
+                        <div class="row g-2 x-small opacity-75 text-center">
+                            <div class="col-6 border-end border-white border-opacity-10">PC: W para arriba /S para abajo y Mouse</div>
+                            <div class="col-6">MÓVIL: toca & auto-disparo</div>
+                        </div>
+                    </div>
+
                     <div class="row g-3">
-                        <div class="col-6 border-end border-white border-opacity-10 text-center">
-                            <div class="fw-bold text-info x-small mb-2 tracking-widest">PC / LAPTOP</div>
-                            <div class="x-small opacity-75">W/S: Moverse<br>Mouse: Apuntar</div>
+                        <div class="col-6">
+                            <div class="hero-selection p-3 h-100" onclick="initGame('superman')">
+                                <img src="assets/img/superman.png" class="hero-img img-fluid mb-2">
+                                <div class="fw-bold x-small">SUPERMAN</div>
+                            </div>
                         </div>
-                        <div class="col-6 ps-3 text-center">
-                            <div class="fw-bold text-warning x-small mb-2 tracking-widest">MÓVIL / TOUCH</div>
-                            <div class="x-small opacity-75">Arrastrar: Moverse<br>Auto-fire: Activo</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row g-4">
-                    <div class="col-6">
-                        <div class="hero-selection superman-card p-3 h-100" onclick="initGame('superman')">
-                            <img src="assets/img/superman.png" class="hero-img img-fluid mb-3">
-                            <div class="h6 fw-bold mb-0 text-white">SUPERMAN</div>
-                            <span class="badge bg-info bg-opacity-10 text-info border border-info x-small mt-2">KRYPTONIAN</span>
-                        </div>
-                    </div>
-                    <div class="col-6">
-                        <div class="hero-selection batman-card p-3 h-100" onclick="initGame('batman')">
-                            <img src="assets/img/batman.png" class="hero-img img-fluid mb-3">
-                            <div class="h6 fw-bold mb-0 text-white">BATMAN</div>
-                            <span class="badge bg-warning bg-opacity-10 text-warning border border-warning x-small mt-2">WAYNE TECH</span>
+                        <div class="col-6">
+                            <div class="hero-selection p-3 h-100" onclick="initGame('batman')">
+                                <img src="assets/img/batman.png" class="hero-img img-fluid mb-2">
+                                <div class="fw-bold x-small">BATMAN</div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="hud-container fixed-top mt-5 pt-4 px-3 pointer-none">
-        <div class="d-flex justify-content-between align-items-center hud-blur p-3 rounded-4 border border-white border-opacity-10 shadow-lg">
-            <div class="px-2">
-                <small class="text-secondary d-block x-small tracking-widest">SCORE</small>
-                <span id="score" class="fs-4 fw-black text-info font-monospace">0000</span>
-            </div>
-            <div class="flex-grow-1 px-4 d-none d-sm-block">
-                <div class="d-flex justify-content-between mb-1">
-                    <span id="health-label" class="x-small tracking-widest text-secondary font-monospace">INTEGRIDAD DEL SISTEMA</span>
-                    <span class="x-small font-monospace">LVL: <span id="level-display">1</span></span>
-                </div>
-                <div class="progress bg-dark bg-opacity-50" style="height: 10px; border-radius: 5px;">
-                    <div id="health-bar" class="progress-bar progress-bar-animated" style="width: 100%"></div>
-                </div>
-            </div>
-            <div class="px-2 text-end">
-                <small class="text-secondary d-block x-small tracking-widest">RECORD</small>
-                <span id="hi-score" class="fs-5 fw-light font-monospace opacity-75">0</span>
-            </div>
-        </div>
-    </div>
-
-    <main class="flex-grow-1 d-flex align-items-center justify-content-center bg-canvas">
         <canvas id="gameCanvas"></canvas>
     </main>
 
-    <footer class="bg-dark text-secondary py-2 border-top border-white border-opacity-10 mt-auto text-center">
+    <footer class="bg-dark text-secondary py-2 border-top border-white border-opacity-10 text-center">
         <span class="x-small font-monospace tracking-widest text-uppercase">
-            Examen Graficación 2D | No.Control: 23200830 | 2026
+            Wayne Enterprises © 2026 | No.Control: 23200830
         </span>
     </footer>
 
